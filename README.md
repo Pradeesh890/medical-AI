@@ -1,150 +1,90 @@
-# Medical Diagnosis AI MCP Tool
+Medical Diagnosis AI Tool
 
-This project is an AI-powered tool designed to assist in medical diagnosis by extracting symptoms from text, fetching relevant articles from PubMed, generating possible diagnoses using the OpenAI GPT-4 model, and summarizing related medical literature. It is also integrated into a Model Context Protocol (MCP) tool for streamlined integration into broader AI systems.
+This project develops a custom Medical Diagnosis Tool designed to assist in preliminary medical assessments by leveraging AI for symptom extraction, diagnosis generation, and medical article summarization. It's built to expose its functionality as a Model Context Protocol (MCP) tool, making it accessible for integration with various platforms.
+Features
 
----
+    Symptom Extraction: Automatically identifies and pulls out key symptoms from patient descriptions.
+    AI-Powered Diagnosis: Provides a potential medical diagnosis based on extracted symptoms, powered by a sophisticated AI model.
+    PubMed Article Fetching: Searches for and retrieves relevant medical articles from PubMed based on symptoms.
+    AI-Powered Article Summarization: Summarizes fetched medical articles concisely using Llama 4 Maverick via the OpenRouter API.
+    MCP Tool: Exposes the entire functionality as an MCP tool for seamless integration into cloud environments or other compatible platforms.
 
-## Features
+Project Structure
 
-- **Symptom Extraction** from user-provided clinical descriptions.
-- **AI Diagnosis Generation** using OpenAI’s GPT-4 model.
-- **PubMed Integration** for fetching relevant medical literature.
-- **Summarization** of article content using GPT-4.
-- **FastAPI Server** for local testing of the API.
-- **MCP Tool** for modular plug-in use.
+The project is neatly organized into several Python files, each handling a specific part of the tool's functionality:
 
----
+medical diagnosis AI MCP/
+├── .env                  # Environment file for API keys
+├── .gitignore            # Git ignore file
+├── fastAPI_app.py        # Local FastAPI application for testing individual tools
+├── mcp_tools.py          # Defines and exposes the MCP tool
+├── pyproject.toml        # Project configuration file (managed by uv)
+└── tools/
+    ├── __init__.py       # Initializes the tools package
+    ├── diagnosis_tools.py  # Handles AI diagnosis generation
+    ├── pubmed_fetcher.py   # Fetches articles from PubMed
+    ├── summarizer.py       # Summarizes text using AI (Llama 4 Maverick)
+    └── symptom_extractor.py# Extracts symptoms from text
 
-## Project Structure
+Technologies Used
 
-```
-medical-diagnosis-ai-mcp/
-│
-├── tools/
-│   ├── __init__.py
-│   ├── symptom_extractor.py
-│   ├── diagnosis_tools.py
-│   ├── pubmed_fetcher.py
-│   └── summarizer.py
-│
-├── .env
-├── fastAPI_app.py
-├── mcp_tools.py
-└── README.md
-```
+    Python 3.x
+    FastAPI: For building the local testing API.
+    FastMCP: For converting the tool into an MCP-compatible service.
+    OpenRouter API: For accessing the Llama 4 Maverick AI model for summarization.
+    openai: For interacting with the AI model for diagnosis.
+    python-dotenv: For securely managing environment variables (API keys).
+    requests: For making HTTP requests to external APIs (e.g., PubMed, OpenRouter).
+    BeautifulSoup4 (bs4): For parsing HTML/XML responses (e.g., PubMed articles).
+    uv: A fast Python package installer and dependency resolver.
 
----
+Setup and Installation
+1. Clone the Repository
 
-## Setup Instructions
+Start by cloning the project to your local machine:
+Bash
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/medical-diagnosis-ai-mcp.git
+git clone https://github.com/your-username/medical-diagnosis-ai-mcp.git # Replace with your repo URL
 cd medical-diagnosis-ai-mcp
-```
 
-### 2. Initialize Project with `uv`
+2. Configure Your .env File
 
-```bash
+Create a file named .env in the root directory of your project. This file will store your sensitive API keys securely:
+
+OPENAI_API_KEY="your_openai_api_key_for_diagnosis_if_applicable"
+OPENROUTER_API_KEY="your_openrouter_api_key"
+
+Important: Replace "your_openai_api_key_for_diagnosis_if_applicable" and "your_openrouter_api_key" with your actual API keys.
+3. Install Dependencies with uv
+
+Navigate to the project's root directory in your terminal and run the following commands to initialize uv and install all necessary dependencies:
+Bash
+
 uv init
-```
-
-This creates the `pyproject.toml` and `.gitignore`.
-
-### 3. Install Dependencies
-
-```bash
 uv add fast-mcp openai python-dotenv requests beautifulsoup4
-```
 
-### 4. Configure API Key
+Running the Local FastAPI Application (for Testing)
 
-Create a `.env` file in the root directory and add your OpenAI API key:
+You can test the individual tool functionalities and the API integration by running the FastAPI application locally:
+Bash
 
-```env
-OPENAI_API_KEY=your_openai_key_here
-```
+uvicorn fastAPI_app:app --reload --port 8080
 
----
-
-## Module Details
-
-### tools/symptom_extractor.py
-
-- **Purpose**: Extracts symptoms using regular expressions.
-- **Returns**: A list of unique symptoms from a clinical description.
-
-### tools/diagnosis_tools.py
-
-- **Purpose**: Uses OpenAI GPT-4 to suggest a diagnosis based on symptoms.
-- **Uses**: `openai.chat.completions.create` and `.env` for API key.
-
-### tools/pubmed_fetcher.py
-
-- **Purpose**: Fetches article metadata from PubMed.
-- **Process**:
-  - Queries PubMed E-Search to get article IDs.
-  - Retrieves XML using E-Fetch.
-  - Parses XML with BeautifulSoup.
-- **Returns**: Titles, abstracts, authors, dates, and URLs.
-
-### tools/summarizer.py
-
-- **Purpose**: Summarizes fetched PubMed articles.
-- **Uses**: GPT-4 with a summarization prompt.
-
----
-
-## Running Locally with FastAPI
-
-### fastAPI_app.py
-
-Provides a local API to test all functions together.
-
-### Endpoint
-
-```http
-POST /diagnosis
-Content-Type: application/json
+Once the server is up and running, open your web browser and navigate to http://127.0.0.1:8080/docs. This will take you to the Swagger UI, where you can interact with and test the /diagnosis endpoint. Send a POST request with a JSON body like this:
+JSON
 
 {
   "description": "patient has a joint pain and fever"
 }
-```
 
-### Response
+The response will show the extracted symptoms, the AI-generated diagnosis, and a summary of relevant PubMed articles.
+Converting and Deploying as an MCP Tool
 
-```json
-{
-  "symptoms": ["joint pain", "fever"],
-  "diagnosis": "Possible diagnosis based on symptoms...",
-  "summary": "Summary of related medical articles..."
-}
-```
+The mcp_tools.py file is where the magic happens for the MCP conversion. It defines the full_medical_analysis function and registers it as an MCP tool.
 
-### Start the Server
+To run the MCP tool locally for development or pre-deployment testing, simply execute:
+Bash
 
-```bash
-uvicorn fastAPI_app:app --reload --port 8080
-```
-
-Visit [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs) to test with Swagger UI.
-
----
-
-## MCP Tool Integration
-
-### mcp_tools.py
-
-- **Purpose**: Converts the application into a reusable MCP tool.
-- **Method**: Uses `fast_mcp.FastMCP` and `@mcp.tool()` decorator.
-- **Tool Function**: `full_medical_analysis()` — performs symptom extraction, diagnosis, article fetching, and summarization.
-
-### Run MCP Tool
-
-```bash
 python mcp_tools.py
-```
 
----
+For deploying the MCP tool to a cloud environment or other compatible platforms, refer to the specific instructions provided by your MCP provider. This usually involves packaging your project and utilizing fast-mcp's deployment commands, which can vary based on your cloud setup.
