@@ -39,7 +39,6 @@ medical-diagnosis-ai-mcp/
 - FastAPI – For building the local testing API.  
 - FastMCP – For converting the tool into an MCP-compatible service.  
 - OpenRouter API – For accessing the Llama 4 Maverick AI model for summarization.  
-- OpenAI – For interacting with the AI model for diagnosis.  
 - python-dotenv – For securely managing environment variables (API keys).  
 - requests – For making HTTP requests to external APIs (e.g., PubMed, OpenRouter).  
 - BeautifulSoup4 (bs4) – For parsing HTML/XML responses (e.g., PubMed articles).  
