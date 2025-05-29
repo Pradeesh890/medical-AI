@@ -46,6 +46,15 @@ medical-diagnosis-ai-mcp/
 
 ---
 
+## Requirements
+
+- Python 3.x installed on your system  
+- A terminal or command line interface  
+- [Claude Desktop]([https://claude.ai/desktop](https://claude.ai/download)) or any other **MCP-supported application** to run and integrate the MCP tool  
+- Valid API keys for OpenAI and OpenRouter  
+
+---
+
 ## Setup and Installation
 
 ### 1. Clone the Repository
@@ -60,7 +69,6 @@ cd medical-diagnosis-ai-mcp
 Create a `.env` file in the root directory with the following contents:
 
 ```env
-OPENAI_API_KEY="your_openai_api_key_for_diagnosis_if_applicable"
 OPENROUTER_API_KEY="your_openrouter_api_key"
 ```
 
@@ -122,7 +130,7 @@ For deployment to cloud environments or other MCP-compatible platforms:
 2. Use deployment commands provided by your MCP platform (these may vary depending on the provider).
 3. Ensure environment variables (`.env`) are properly set up in your deployment environment.
 
-Refer to the official [FastMCP](https://pypi.org/project/fast-mcp/) documentation for advanced deployment steps.
+Refer to the official [FastMCP](https://gofastmcp.com/getting-started/welcome) documentation for advanced deployment steps.
 
 ---
 
